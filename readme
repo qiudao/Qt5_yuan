@@ -1,0 +1,10 @@
+	Yuan is a protoco for transmit message between two network entities. 
+It is used with google protobuf. Yuan is in the form of byte stream, 
+and variable length, including fixed length header and variable length payload. 
+	The header is fixed length(12 bytes). composed of magic code (4bytes), 
+id (4bytes), payload length(4 bytes).
+	The payload is variable length bytes, following the header.
+
+features:
+	- running in a thread
+	- async
