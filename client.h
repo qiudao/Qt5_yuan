@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QTextEdit>
 #include "yuan.h"
 
 namespace Ui {
@@ -24,6 +25,8 @@ public slots:
 	void OnDisonnectedServer();
 	void OnDial();
 	void OnDisconnect();
+	void OnSend();
+	void OnRead();
 
 private:
 	void setupInfoBox();
@@ -36,6 +39,9 @@ private:
 	QLineEdit	*m_le_port;
 	QPushButton *m_btn_dial;
 	QPushButton *m_btn_disconnect;
+	QPushButton *m_btn_send;
+	QTextEdit	*m_editRead;
+	QTextEdit	*m_editWrite;
 };
 
 #endif // CLIENT_H

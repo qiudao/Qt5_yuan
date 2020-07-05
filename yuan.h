@@ -36,16 +36,19 @@ public:
 signals:
 	void connected();
 	void disconnected();
+	void readyRead();
 
 public slots:
 	void OnServerConnected();
 	void OnServerDisconnected();
+	void OnRead();
 
 private:
 	QList<YuanS> 	m_rlist;
 	QList<YuanS> 	m_wlist;
 	QString 		m_server;
 	quint16			m_port;
+	QByteArray		m_rbuf;
 
 	QTcpSocket		*m_serverPeer;
 	QString			m_serverError;

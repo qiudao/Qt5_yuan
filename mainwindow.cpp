@@ -23,7 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
 	m_client2->setStyleSheet("background-color:#C4F2C5;");
 	m_server->setStyleSheet("background-color:#AED1F4;");
 
+
 	setCentralWidget(cwidget);
+	resize(1050, 600);
 }
 
 MainWindow::~MainWindow()
