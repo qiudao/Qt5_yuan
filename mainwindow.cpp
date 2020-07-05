@@ -23,7 +23,13 @@ MainWindow::MainWindow(QWidget *parent)
 	m_client2->setStyleSheet("background-color:#C4F2C5;");
 	m_server->setStyleSheet("background-color:#AED1F4;");
 
+	// background
+	cwidget->setAutoFillBackground(true);
+	QPalette palette;
+	palette.setBrush(QPalette::Window, QBrush(QPixmap(":/images/setup-page-background.png")));
+	cwidget->setPalette(palette);
 
+	
 	setCentralWidget(cwidget);
 	resize(1050, 600);
 }

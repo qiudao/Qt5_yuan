@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/gbuy.png</file>
+        <file>images/setup-page-background.png</file>
+    </qresource>
+</RCC>

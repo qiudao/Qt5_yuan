@@ -137,6 +137,8 @@ void ServerThread::On1Disconnected()
 }
 void ServerThread::On1ReadyRead()
 {
+	if (m_client2 == NULL)
+		return;
 	QByteArray data = m_client1->readAll();
 	m_client2->write(data);
 	qDebug() << "On1ReadyRead, size " << data.size() <<", : " << data;
@@ -151,6 +153,8 @@ void ServerThread::On2Disconnected()
 void ServerThread::On2ReadyRead()
 {
 	qDebug() << "On2ReadyRead";
+	if (m_client1 == NULL)
+		return;
 	QByteArray data = m_client2->readAll();
 	m_client1->write(data);
 }
