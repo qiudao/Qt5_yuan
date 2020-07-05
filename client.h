@@ -23,6 +23,7 @@ public slots:
 	void OnConnectedServer();
 	void OnDisonnectedServer();
 	void OnDial();
+	void OnDisconnect();
 
 private:
 	void setupInfoBox();
@@ -34,6 +35,7 @@ private:
 	QLineEdit	*m_le_server;
 	QLineEdit	*m_le_port;
 	QPushButton *m_btn_dial;
+	QPushButton *m_btn_disconnect;
 };
 
 #endif // CLIENT_H

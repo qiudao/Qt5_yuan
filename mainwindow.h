@@ -21,7 +21,8 @@ public:
 private:
     Ui::MainWindow *ui;
 
-	Client *m_client;
+	Client *m_client1;
+	Client *m_client2;
 	Server *m_server;
 };
 #endif // MAINWINDOW_H

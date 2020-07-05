@@ -31,6 +31,7 @@ void Yuan::Dial(QString& server, quint16 port)
 
 	if (m_serverPeer->state() == QAbstractSocket::ConnectedState)
 	{
+		qDebug() << "Deisconnect from server: " << m_server << ", port " << m_port;
 		m_serverPeer->disconnectFromHost();
 	}
 	m_serverPeer->connectToHost(m_server, m_port);
