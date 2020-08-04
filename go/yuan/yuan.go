@@ -12,16 +12,17 @@ const (
 	Magic2 = 0x55
 )
 
-type _Yuan struct {
-	magic1	uint8
-	magic2	uint8
-	yaddr	uint16
-	length	uint32
+type YuanBlock struct {
+	magic1		uint8
+	magic2		uint8
+	serviceId	uint16
+	length		uint32
 	buf []byte
 }
 
 type Yuan struct {
 	server string
+	connId	int
 }
 
 func init() {
@@ -72,13 +73,29 @@ func (y Yuan)handleRequest(conn net.Conn) {
 	log.Printf("yuan: %s\n", y.String())
 }
 
-// Read & Write
-func (y Yuan)ReadY(id int, buf []byte) (n int) {
+func (y Yuan)ConnId() int {
+	return y.connId
+}
+
+// Read & Write stream
+func (y Yuan)ReadStream(buf []byte) (n int) {
 	return 0
 }
 
-func (y Yuan)WriteY(id int, buf []byte) (n int) {
+func (y Yuan)WriteStream(buf []byte) (n int) {
 	return 0
+}
+// Read & Write Block
+func (y Yuan)ReadBlock() (*YuanBlock, error) {
+	return &YuanBlock{}, nil
+}
+func (y Yuan)WriteBlock(yb YuanBlock) (error) {
+	return nil
 }
 
 
+// YuanBlock
+// 
+func (yb YuanBlock)ServiceId() uint16 {
+	return yb.serviceId
+}
