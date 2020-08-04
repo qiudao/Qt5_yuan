@@ -42,7 +42,7 @@ func (y Yuan)ListenAndServe(serverAddr string) {
 
 	l, err := net.Listen("tcp",  serverAddr)
 	if err != nil {
-		log.Printf("Error Listening: ", err.Error())
+		log.Println("Error Listening: ", err.Error())
 		os.Exit(1)
 	}
 
