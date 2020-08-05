@@ -19,9 +19,9 @@ func TestPush(t *testing.T) {
 	// push few times
 	for i := 0; i < 21; i++ {
 		var yb YuanBlock
-		yb.serviceId = id
-		yb.length	 = length
-		yb.buf = append(yb.buf, []byte("hello, yuan")...)
+		yb.servId	= id
+		yb.dataLen	= length
+		yb.data		= append(yb.data, []byte("hello, yuan")...)
 
 		if ok := cb.Push(yb); !ok {
 			t.Errorf("test push error %d", 3)
@@ -42,6 +42,6 @@ func TestPop(t *testing.T) {
 				t.Errorf("test pop error: %v", err)
 			}
 
-		fmt.Printf("yb: id %d len %d buf: %s\n", yb.serviceId, yb.length, string(yb.buf))
+		fmt.Printf("yb: id %d len %d buf: %s\n", yb.servId, yb.dataLen, string(yb.data))
 	}
 }

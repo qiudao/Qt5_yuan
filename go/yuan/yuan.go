@@ -13,11 +13,10 @@ const (
 )
 
 type YuanBlock struct {
-	magic1		uint8
-	magic2		uint8
-	serviceId	uint16
-	length		uint32
-	buf []byte
+	connId	uint16
+	servId	uint16
+	dataLen uint32
+	data	[]byte
 }
 
 type Yuan struct {
@@ -97,5 +96,5 @@ func (y Yuan)WriteBlock(yb YuanBlock) (error) {
 // YuanBlock
 // 
 func (yb YuanBlock)ServiceId() uint16 {
-	return yb.serviceId
+	return yb.servId
 }
