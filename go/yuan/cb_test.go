@@ -7,6 +7,12 @@ import (
 
 var cb CB
 
+func TestNew(t *testing.T) {
+	var yb YuanBlock
+	y := NewCB(yb, 100)
+	y.Dump()
+}
+
 func TestCBResize(t *testing.T) {
 	cb.Resize(20)
 	fmt.Println(cb.String())

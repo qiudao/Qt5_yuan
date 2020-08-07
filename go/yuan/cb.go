@@ -4,6 +4,7 @@ import (
 		"log"
 		"fmt"
 		"errors"
+		"reflect"
 	   )
 
 var ErrEmpty = errors.New("empty")
@@ -14,6 +15,16 @@ type CB struct {
 	count		int
 	head		int
 	tail		int
+	data interface{}
+}
+
+func NewCB(v interface{}, capability int) CB {
+	var cb CB
+	t := reflect.TypeOf(v)
+	cb.data = reflect.MakeSlice(reflect.SliceOf(t), capability+1, capability+1)
+	fmt.Printf("data: %T\n", cb.data)
+
+	return CB{}
 }
 
 func (cb *CB)Resize(n int) {
