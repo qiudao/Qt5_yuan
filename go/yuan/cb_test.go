@@ -8,8 +8,7 @@ import (
 var cb CB
 
 func TestNew(t *testing.T) {
-	var yb YuanBlock
-	y := NewCB(yb, 100)
+	y := NewCB(100)
 	y.Dump()
 }
 
@@ -40,14 +39,25 @@ func TestPush(t *testing.T) {
 	cb.Dump()
 }
 
+func TestAt(t *testing.T) {
+	if e := cb.At(0); e != nil {
+		yb := e.(YuanBlock)
+		fmt.Printf("yb[0]: id %d len %d buf: %s\n", yb.servId, yb.dataLen, string(yb.data))
+	} else {
+		t.Errorf("At 0 failed")
+	}
+
+}
+
 func TestPop(t *testing.T) {
 
 	for i:= 0; i < 10; i++ {
-		yb, err := cb.Pop()
-			if err != nil {
-				t.Errorf("test pop error: %v", err)
-			}
+		if e := cb.Pop(); e == nil {
+			t.Errorf("pop2 error")
+		} else {
+			yb := e.(YuanBlock)
+			fmt.Printf("yb: id %d len %d buf: %s\n", yb.servId, yb.dataLen, string(yb.data))
+		}
 
-		fmt.Printf("yb: id %d len %d buf: %s\n", yb.servId, yb.dataLen, string(yb.data))
 	}
 }
