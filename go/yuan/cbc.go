@@ -1,7 +1,6 @@
 package yuan
 
 import (
-		"log"
 		"fmt"
 	   )
 
@@ -17,7 +16,6 @@ func (cb *CBC)Init(n int) {
 	cb.capb = n
 	cb.buf = make([]byte, n+1)
 	cb.Reset()
-	log.Println("Resize")
 }
 
 func (cb *CBC)String() string {
@@ -85,19 +83,30 @@ func (cb *CBC)Pop() (byte, error) {
 	return c, nil
 }
 
+//DropN
+func (cb *CBC)DropN(n int) {
+	if n > cb.count {
+		n = cb.count
+	}
+
+	for i := 0; i < n; i++ {
+		cb.Pop()
+	}
+}
+
 // At
-func (cb CBC)At(index int) (byte, error) {
+func (cb CBC)At(index int) (byte) {
 	var c byte
 
 	if index < 0 {
 		index += cb.count
 		if index < 0 {
-			return c, ErrEmpty
+			return c
 		}
 	}
 
 	if index + 1 > cb.count {
-		return c, ErrEmpty
+		return c
 	}
 
 	index += cb.head
@@ -106,5 +115,10 @@ func (cb CBC)At(index int) (byte, error) {
 	}
 	c = cb.buf[index]
 
-	return c, nil
+	return c
+}
+
+// Last
+func (cb *CBC)Last() byte {
+	return cb.At(cb.count-1)
 }
