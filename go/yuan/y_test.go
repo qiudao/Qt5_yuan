@@ -70,3 +70,39 @@ func TestSeekMagic3(t *testing.T) {
 		t.Errorf("seek failed, y.Count(%d) should be 2", y.Count())
 	}
 }
+
+func TestLength(t *testing.T) {
+	y.Reset()
+	y.Init(10)
+	y.Push('c')
+	y.Push('f')
+	y.Push('z')
+	y.Push(Magic1)
+	y.Push(Magic2)
+	y.Push(0x00)
+	y.Push(0x03)
+
+	if y.IsComplete() {
+		t.Errorf("IsComplete() fail, should not be ok")
+	}
+}
+
+
+func TestLength2(t *testing.T) {
+	y.Reset()
+	y.Init(10)
+	y.Push('c')
+	y.Push('f')
+	y.Push('z')
+	y.Push(Magic1)
+	y.Push(Magic2)
+	y.Push(0x00)
+	y.Push(0x03)
+	for i := 0; i < 5; i++ {
+		y.Push(0x01)
+	}
+
+	if !y.IsComplete() {
+		t.Errorf("IsComplete() fail, should be ok")
+	}
+}

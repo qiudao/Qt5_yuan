@@ -1,6 +1,7 @@
 package yuan
 
 import (
+		"fmt"
 	   )
 
 type YBuf struct {
@@ -35,3 +36,23 @@ func (y *YBuf)seekmagic() bool {
 	return ret
 }
 
+// is Complete YuanBlock
+func (y *YBuf)IsComplete() bool {
+	if ok := y.seekmagic(); !ok {
+		return false
+	}
+
+	if y.Count() < 4 {
+		return false
+	}
+
+	var length uint16 = uint16(y.At(2)) << 8 | uint16(y.At(3))
+	fmt.Printf("length %d\n", length)
+
+	// 2(magic) + 2(length) + length(data_payload)
+	if y.Count() < int(2 + 2 + length) {
+		return false
+	}
+
+	return true
+}
