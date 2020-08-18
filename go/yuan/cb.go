@@ -4,39 +4,35 @@ import (
 		"log"
 		"fmt"
 		"errors"
-		"reflect"
 	   )
 
 var ErrEmpty = errors.New("empty")
 
 type CB struct {
-	buf []YuanBlock
-	capability	int
+	capb	int
 	count		int
 	head		int
 	tail		int
-	data interface{}
+	data []interface{}
 }
 
-func NewCB(v interface{}, capability int) CB {
+func NewCB(capb int) CB {
 	var cb CB
-	t := reflect.TypeOf(v)
-	cb.data = reflect.MakeSlice(reflect.SliceOf(t), capability+1, capability+1)
-	fmt.Printf("data: %T\n", cb.data)
+	cb.data = make([]interface{}, capb+1, capb+1)
 
 	return CB{}
 }
 
 func (cb *CB)Resize(n int) {
-	cb.capability = n
-	cb.buf = make([]YuanBlock, n+1)
+	cb.capb = n
+	cb.data = make([]interface{}, n+1)
 	cb.Reset()
 	log.Println("Resize")
 }
 
 func (cb CB)String() string {
 	return fmt.Sprintf("cap %d count %d head %d tail %d",
-			cb.capability, cb.count, cb.head, cb.tail)
+			cb.capb, cb.count, cb.head, cb.tail)
 }
 
 func (cb CB)Dump() {
@@ -53,41 +49,41 @@ func (cb CB)IsEmpty() bool {
 	return cb.count == 0
 }
 func (cb CB)IsFull() bool {
-	return cb.count == cb.capability
+	return cb.count == cb.capb
 }
 func (cb CB)Count() int {
 	return cb.count
 }
 
 // Push
-func (cb *CB)Push(yb YuanBlock) bool {
+func (cb *CB)Push(x interface{}) bool {
 	if cb.IsFull() {
 		cb.head++;
-		if (cb.head > cb.capability) {
+		if (cb.head > cb.capb) {
 			cb.head = 0
 		}
 	} else {
 		cb.count++
 	}
 
-	cb.buf[cb.tail] = yb
+	cb.data[cb.tail] = x
 	cb.tail++
-	if cb.tail > cb.capability {
+	if cb.tail > cb.capb {
 		cb.tail = 0
 	}
 
 	return true
 }
+
 // Pop
-func (cb *CB)Pop() (YuanBlock, error) {
+func (cb *CB)Pop() (interface{}) {
 	if cb.IsEmpty() {
-		return YuanBlock{}, ErrEmpty
+		return nil
 	}
 
-	var yb YuanBlock
-	yb = cb.buf[cb.head]
+	e := cb.data[cb.head]
 	cb.head++
-	if cb.head > cb.capability {
+	if cb.head > cb.capb {
 		cb.head = 0
 	}
 	cb.count--
@@ -95,29 +91,30 @@ func (cb *CB)Pop() (YuanBlock, error) {
 		cb.Reset()
 	}
 
-	return yb, nil
+	return e
 }
 
 // At
-func (cb CB)At(index int) (YuanBlock, error) {
-	var yb YuanBlock
+
+func (cb CB)At(index int) interface{} {
+	var e interface{}
 
 	if index < 0 {
 		index += cb.count
 		if index < 0 {
-			return yb, ErrEmpty
+			return e
 		}
 	}
 
 	if index + 1 > cb.count {
-		return yb, ErrEmpty
+		return e
 	}
 
 	index += cb.head
-	if index > cb.capability {
-		index -= (cb.capability + 1)
+	if index > cb.capb {
+		index -= (cb.capb + 1)
 	}
-	yb = cb.buf[index]
+	e = cb.data[index]
 
-	return yb, nil
+	return e
 }
