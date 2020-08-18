@@ -1,6 +1,7 @@
 package yuan
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -97,4 +98,7 @@ func (y Yuan)WriteBlock(yb YuanBlock) (error) {
 // 
 func (yb YuanBlock)ServiceId() uint16 {
 	return yb.servId
+}
+func (yb YuanBlock)Dump() {
+	fmt.Printf("servId %d\n", yb.servId)
 }

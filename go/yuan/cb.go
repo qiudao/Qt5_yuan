@@ -55,6 +55,9 @@ func (cb CB)IsEmpty() bool {
 func (cb CB)IsFull() bool {
 	return cb.count == cb.capability
 }
+func (cb CB)Count() int {
+	return cb.count
+}
 
 // Push
 func (cb *CB)Push(yb YuanBlock) bool {
