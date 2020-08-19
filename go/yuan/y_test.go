@@ -2,7 +2,7 @@ package yuan
 
 import (
 		"testing"
-		//"fmt"
+		"bytes"
 	   )
 
 var y YBuf
@@ -105,4 +105,34 @@ func TestLength2(t *testing.T) {
 	if !y.IsComplete() {
 		t.Errorf("IsComplete() fail, should be ok")
 	}
+}
+
+func TestReadBlock(t *testing.T) {
+	y.Reset()
+	y.Init(30)
+	y.Push('c')
+	y.Push('f')
+	y.Push('z')
+	y.Push(Magic1)
+	y.Push(Magic2)
+	y.Push(0x00)
+	y.Push(0x0f)
+	s := []byte("hello,world,oknow")
+	for i := 0; i < len(s); i++ {
+		y.Push(s[i])
+	}
+
+	if !y.IsComplete() {
+		t.Errorf("IsComplete() fail, should be ok")
+	}
+
+	var b bytes.Buffer
+	if ok := y.ReadBlock(&b); !ok {
+		t.Errorf("ReadBlock failed.")
+	} else {
+		if b.Len() != 0x0f {
+			t.Errorf("ReadBlock data failed, return %d, should be %d\n", b.Len(), 0x0f)
+		}
+	}
+	y.Dump()
 }

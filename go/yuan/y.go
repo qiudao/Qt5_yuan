@@ -1,7 +1,7 @@
 package yuan
 
 import (
-		"fmt"
+		"bytes"
 	   )
 
 type YBuf struct {
@@ -9,7 +9,7 @@ type YBuf struct {
 }
 
 func (y *YBuf)seekmagic() bool {
-	var found int
+	var found int = -1
 	var ret bool = false
 
 	if y.Count() < 2 {
@@ -23,14 +23,16 @@ func (y *YBuf)seekmagic() bool {
 		}
 	}
 
-	if found == 0 {
+	if found == -1 {
 		if y.Last() == Magic1 {
 			y.DropN(y.Count()-1)
 		} else {
 			y.Reset()
 		}
 	} else {
-		y.DropN(found)
+		if found > 0 {
+			y.DropN(found)
+		}
 		ret = true
 	}
 	return ret
@@ -47,12 +49,36 @@ func (y *YBuf)IsComplete() bool {
 	}
 
 	var length uint16 = uint16(y.At(2)) << 8 | uint16(y.At(3))
-	fmt.Printf("length %d\n", length)
 
-	// 2(magic) + 2(length) + length(data_payload)
+	// 2:magic, 2:length, length:data_payload
 	if y.Count() < int(2 + 2 + length) {
 		return false
 	}
 
+	return true
+}
+
+// firstBlockSize
+func (y *YBuf)firstBlockSize() int {
+	return int( uint16(y.At(2)) << 8 | uint16(y.At(3)))
+}
+// firstBlockData
+// FIXME: use "block copy" instead of "byte copy"
+func (y *YBuf)firstBlockData() []byte {
+	l := y.firstBlockSize()
+	b := make([]byte, l)
+	for i := 0; i < l; i++ {
+		b[i] = y.At(i + 4)
+	}
+   return b
+}
+
+// ReadBlock
+func (y *YBuf)ReadBlock(b *bytes.Buffer) bool {
+	if !y.IsComplete() {
+		return false
+	}
+
+	b.Write(y.firstBlockData())
 	return true
 }
