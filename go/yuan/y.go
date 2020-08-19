@@ -2,6 +2,7 @@ package yuan
 
 import (
 		"bytes"
+		"errors"
 	   )
 
 type YBuf struct {
@@ -39,7 +40,7 @@ func (y *YBuf)seekmagic() bool {
 }
 
 // is Complete YuanBlock
-func (y *YBuf)IsComplete() bool {
+func (y *YBuf)ScanBlock() bool {
 	if ok := y.seekmagic(); !ok {
 		return false
 	}
@@ -75,10 +76,24 @@ func (y *YBuf)firstBlockData() []byte {
 
 // ReadBlock
 func (y *YBuf)ReadBlock(b *bytes.Buffer) bool {
-	if !y.IsComplete() {
+	if !y.ScanBlock() {
 		return false
 	}
 
 	b.Write(y.firstBlockData())
 	return true
+}
+// Write
+func (y *YBuf)Write(p []byte) (n int, err error) {
+	left := y.Space()
+
+	if left < len(p) {
+		return 0, errors.New("no space")
+	}
+
+	var i int
+	for i = 0; i < len(p); i++ {
+		y.Push(p[i])
+	}
+	return i, nil
 }

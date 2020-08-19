@@ -1,6 +1,7 @@
 package yuan
 
 import (
+		"fmt"
 		"testing"
 		"bytes"
 	   )
@@ -82,8 +83,8 @@ func TestLength(t *testing.T) {
 	y.Push(0x00)
 	y.Push(0x03)
 
-	if y.IsComplete() {
-		t.Errorf("IsComplete() fail, should not be ok")
+	if y.ScanBlock() {
+		t.Errorf("ScanBlock() fail, should not be ok")
 	}
 }
 
@@ -102,8 +103,8 @@ func TestLength2(t *testing.T) {
 		y.Push(0x01)
 	}
 
-	if !y.IsComplete() {
-		t.Errorf("IsComplete() fail, should be ok")
+	if !y.ScanBlock() {
+		t.Errorf("ScanBlock() fail, should be ok")
 	}
 }
 
@@ -122,8 +123,8 @@ func TestReadBlock(t *testing.T) {
 		y.Push(s[i])
 	}
 
-	if !y.IsComplete() {
-		t.Errorf("IsComplete() fail, should be ok")
+	if !y.ScanBlock() {
+		t.Errorf("ScanBlock() fail, should be ok")
 	}
 
 	var b bytes.Buffer
@@ -132,6 +133,33 @@ func TestReadBlock(t *testing.T) {
 	} else {
 		if b.Len() != 0x0f {
 			t.Errorf("ReadBlock data failed, return %d, should be %d\n", b.Len(), 0x0f)
+		}
+	}
+	y.Dump()
+}
+
+func TestWrite(t *testing.T) {
+	y.Reset()
+	y.Init(100)
+	y.Push(Magic1)
+	y.Push(Magic2)
+	y.Push(0x00)
+	y.Push(0x10)
+	y.Write([]byte("hello, gogogo, nice to meet you"))
+	y.Dump()
+
+	if !y.ScanBlock() {
+		t.Errorf("Test Write: scan failed.")
+	}
+
+	var b bytes.Buffer
+	if ok := y.ReadBlock(&b); !ok {
+		t.Errorf("ReadBlock failed.")
+	} else {
+		if b.Len() != 0x10 {
+			t.Errorf("ReadBlock data failed, return %d, should be %d\n", b.Len(), 0x10)
+		} else {
+			fmt.Printf("Write: %s\n", b.String())
 		}
 	}
 	y.Dump()

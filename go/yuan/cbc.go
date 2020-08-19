@@ -42,6 +42,9 @@ func (cb *CBC)IsFull() bool {
 func (cb *CBC)Count() int {
 	return cb.count
 }
+func (cb *CBC)Space() int {
+	return cb.capb - cb.count
+}
 
 // Push
 func (cb *CBC)Push(c byte) bool {
