@@ -8,6 +8,12 @@ import (
 	"strconv"
 )
 
+//Interface
+type yuanintf interface {
+	Start(string)
+	Close()
+}
+
 const (
 	Magic1 = 0xAA
 	Magic2 = 0x55
@@ -36,7 +42,8 @@ func (y Yuan)String() string {
 	return "this is yuan"
 }
 
-func (y Yuan)ListenAndServe(serverAddr string) {
+//Start
+func (y Yuan)Start(serverAddr string) {
 
 	log.Println("yuan start...")
 
@@ -59,6 +66,9 @@ func (y Yuan)ListenAndServe(serverAddr string) {
 
 		go y.handleRequest(conn)
 	}
+}
+//Close
+func  (y Yuan)Close() {
 }
 
 func (y Yuan)handleRequest(conn net.Conn) {
